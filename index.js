@@ -28,11 +28,13 @@ function processArgs() {
         }
     }
 
+    // Перевірка на обов'язковий параметр
     if (!inputFile) {
         console.error('Please, specify input file');
         process.exit(1);
     }
 
+    // Перевірка, чи існує вказаний файл
     try {
         fs.accessSync(inputFile, fs.constants.F_OK);
     } catch (err) {
@@ -57,6 +59,18 @@ function processArgs() {
                 console.log('There is no items matching the filter conditions');
             }
         }
+
+        // Запис у файл, якщо вказано
+        if (outputFile) {
+            try {
+                fs.writeFileSync(outputFile, filteredValues.join(' '));
+                console.log(`Results saved to ${outputFile}`);
+            } catch (err) {
+                console.error('Error writing to output file:', err.message);
+                process.exit(1);
+            }
+        }
+
     } catch (err) {
         console.error('Error processing file:', err.message);
         process.exit(1);
